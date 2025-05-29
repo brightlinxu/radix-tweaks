@@ -186,14 +186,14 @@ const PopperContent = React.forwardRef<PopperContentElement, PopperContentProps>
       },
       middleware: [
         offset({ mainAxis: sideOffset + arrowHeight, alignmentAxis: alignOffset }),
+        avoidCollisions && flip({ ...detectOverflowOptions }),
         avoidCollisions &&
           shift({
             mainAxis: true,
-            crossAxis: false,
+            crossAxis: true,
             limiter: sticky === 'partial' ? limitShift() : undefined,
             ...detectOverflowOptions,
           }),
-        avoidCollisions && flip({ ...detectOverflowOptions }),
         size({
           ...detectOverflowOptions,
           apply: ({ elements, rects, availableWidth, availableHeight }) => {
@@ -203,6 +203,8 @@ const PopperContent = React.forwardRef<PopperContentElement, PopperContentProps>
             contentStyle.setProperty('--radix-popper-available-height', `${availableHeight}px`);
             contentStyle.setProperty('--radix-popper-anchor-width', `${anchorWidth}px`);
             contentStyle.setProperty('--radix-popper-anchor-height', `${anchorHeight}px`);
+            contentStyle.setProperty('--available-height', `${Math.max(0, availableHeight)}px`)
+            contentStyle.maxHeight = `${Math.max(0, availableHeight)}px`;
           },
         }),
         arrow && floatingUIarrow({ element: arrow, padding: arrowPadding }),
